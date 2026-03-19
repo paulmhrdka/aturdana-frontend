@@ -15,9 +15,14 @@
 - Named exports preferred (not default exports for components in `src/components/`)
 - Page components use default exports (Next.js requirement)
 
+## View / Logic Separation
+- **Pages and components** are view-only — JSX, prop binding, calling handlers. No inline state or API calls.
+- **Custom hooks** (`src/hooks/`) own all stateful logic: form setup, query calls, derived state, handlers. Named `use-<feature>.ts`.
+- A page imports one hook: `const { form, onSubmit, isPending } = useLoginForm()`
+
 ## API / Services Pattern
-- Services are custom hooks built on React Query mutations (`useMutation`)
-- Located in `src/services/`
+- Services are custom hooks built on React Query (`useQuery` / `useMutation`)
+- Located in `src/services/`, one file per domain (auth, transaction, category)
 - Each service hook handles its own success toast + navigation
 
 ## State Management
