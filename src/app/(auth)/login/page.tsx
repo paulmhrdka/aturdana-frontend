@@ -1,10 +1,6 @@
 'use client'
 
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { loginSchema } from '@/types/auth.types'
-import type { LoginFormData } from '@/types/auth.types'
-import { useLogin } from '@/services/auth.service'
+import { useLoginForm } from '@/hooks/use-login'
 import {
   Form,
   FormControl,
@@ -24,22 +20,9 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import Link from 'next/link'
-import { toast } from 'sonner'
 
 export default function LoginPage() {
-  const form = useForm<LoginFormData>({
-    resolver: zodResolver(loginSchema),
-    defaultValues: { email: '', password: '' },
-  })
-  const login = useLogin()
-
-  function onSubmit(data: LoginFormData) {
-    login.mutate(data, {
-      onError: (error) => {
-        toast.error(error instanceof Error ? error.message : 'Login failed. Please try again.')
-      },
-    })
-  }
+  const { form, onSubmit, isPending } = useLoginForm()
 
   return (
     <div className="flex min-h-screen items-center justify-center px-4">
@@ -77,8 +60,8 @@ export default function LoginPage() {
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="w-full" disabled={login.isPending}>
-                {login.isPending ? 'Signing in…' : 'Sign in'}
+              <Button type="submit" className="w-full" disabled={isPending}>
+                {isPending ? 'Signing in…' : 'Sign in'}
               </Button>
             </form>
           </Form>

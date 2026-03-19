@@ -1,75 +1,86 @@
-# React + TypeScript + Vite
+<h1 align="center">AturDana Frontend</h1>
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+<p align="center">Personal finance tracker web app</p>
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Features
 
-## React Compiler
+- Track income and expenses
+- Financial dashboard with charts and summaries
+- Date-range filtering for transaction data
+- Secure JWT-based authentication
+- Category management
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+## Tech Stack
 
-Note: This will impact Vite dev & build performances.
+- **Next.js 15** (App Router) + **React 19** + **TypeScript 5** (strict)
+- **TailwindCSS v4** for styling
+- **shadcn/ui** (Radix UI primitives) for UI components
+- **Zustand v5** for client state (auth)
+- **TanStack React Query v5** for server state
+- **Axios** for HTTP, **React Hook Form + Zod v4** for forms
 
-## Expanding the ESLint configuration
+## Getting Started
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Prerequisites
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- Node.js 20+
+- npm
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### Installation
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```sh
+git clone https://github.com/paulmhrdka/aturdana-frontend.git
+cd aturdana-frontend
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Environment Variables
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Create a `.env.local` file:
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```env
+NEXT_PUBLIC_API_URL=http://localhost:8080
 ```
+
+### Running the App
+
+```sh
+npm run dev      # Dev server at http://localhost:3000
+npm run build    # Production build
+npm run lint     # ESLint
+```
+
+## Project Structure
+
+```
+src/
+  app/
+    (auth)/          # login, register pages
+    (protected)/     # dashboard and other authenticated pages
+    api/             # Next.js API routes
+  components/
+    ui/              # shadcn/ui components
+    dashboard/       # Dashboard-specific view components
+    layout/          # Layout components (AppSidebar, etc.)
+  hooks/             # Custom hooks — all logic lives here
+  lib/               # Axios instance, React Query client, utilities
+  providers/         # AppProviders (QueryClient + Toaster)
+  services/          # React Query hooks per domain
+  store/             # Zustand stores
+  types/             # Zod schemas + inferred TypeScript types
+  middleware.ts      # Route protection
+```
+
+## Auth Flow
+
+1. Login/register → API returns JWT token + user
+2. Token saved to Zustand + `localStorage` + `aturdana-token` cookie
+3. `middleware.ts` reads cookie to protect routes and redirect authenticated users away from auth pages
+4. Axios interceptor attaches `Bearer <token>`; 401 clears auth and redirects to `/login`
+
+## Contact
+
+- **Email:** [mahardikapaul@gmail.com](mailto:mahardikapaul@gmail.com)
+- **GitHub Issues:** [Issues Page](https://github.com/paulmhrdka/aturdana-frontend/issues)

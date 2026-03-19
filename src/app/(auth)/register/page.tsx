@@ -1,10 +1,6 @@
 'use client'
 
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { registerSchema } from '@/types/auth.types'
-import type { RegisterFormData } from '@/types/auth.types'
-import { useRegister } from '@/services/auth.service'
+import { useRegisterForm } from '@/hooks/use-register'
 import {
   Form,
   FormControl,
@@ -24,29 +20,16 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import Link from 'next/link'
-import { toast } from 'sonner'
 
 export default function RegisterPage() {
-  const form = useForm<RegisterFormData>({
-    resolver: zodResolver(registerSchema),
-    defaultValues: { username: '', email: '', password: '', confirmPassword: '' },
-  })
-  const register = useRegister()
-
-  function onSubmit(data: RegisterFormData) {
-    register.mutate(data, {
-      onError: (error) => {
-        toast.error(error instanceof Error ? error.message : 'Registration failed. Please try again.')
-      },
-    })
-  }
+  const { form, onSubmit, isPending } = useRegisterForm()
 
   return (
     <div className="flex min-h-screen items-center justify-center px-4">
       <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle>Create account</CardTitle>
-          <CardDescription>Sign up to start tracking your finances</CardDescription>
+          <CardDescription>Sign up to start tracking your finances with AturDana</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -103,8 +86,8 @@ export default function RegisterPage() {
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="w-full" disabled={register.isPending}>
-                {register.isPending ? 'Creating account…' : 'Create account'}
+              <Button type="submit" className="w-full" disabled={isPending}>
+                {isPending ? 'Creating account…' : 'Create account'}
               </Button>
             </form>
           </Form>

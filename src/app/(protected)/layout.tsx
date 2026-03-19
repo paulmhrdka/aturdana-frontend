@@ -1,24 +1,24 @@
 'use client'
 
-import { useEffect } from 'react'
-import { useRouter } from 'next/navigation'
-import { useAuthStore } from '@/store/auth.store'
+import { useProtectedLayout } from '@/hooks/use-protected-layout'
+import { SidebarProvider } from '@/components/ui/sidebar'
+import { AppSidebar } from '@/components/layout/app-sidebar'
 
 export default function ProtectedLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  const token = useAuthStore((s) => s.token)
-  const router = useRouter()
+  const { isAuthenticated } = useProtectedLayout()
 
-  useEffect(() => {
-    if (!token) {
-      router.replace('/login')
-    }
-  }, [token, router])
+  if (!isAuthenticated) return null
 
-  if (!token) return null
-
-  return <>{children}</>
+  return (
+    <SidebarProvider>
+      <AppSidebar />
+      <main className="flex-1 overflow-auto">
+        {children}
+      </main>
+    </SidebarProvider>
+  )
 }
